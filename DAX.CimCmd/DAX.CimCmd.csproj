@@ -47,8 +47,9 @@
   <ItemGroup>
     <Compile Include="BaseCommand.cs" />
     <Compile Include="BaseCommandWithOutputFile.cs" />
+    <Compile Include="Commands\ApplyCommand.cs" />
     <Compile Include="Commands\DiffCommand.cs" />
-    <Compile Include="Commands\FullExportCommand.cs" />
+    <Compile Include="Commands\ExportCommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
