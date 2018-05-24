@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DAX.IO.CIM</name>
+    </assembly>
+    <members>
+        <member name="P:DAX.IO.CIM.CIMIdentifiedObject.InternalId">
+            <summary>
+            ID used internally to refer to the CIM object from within a graph.
+            </summary>
+        </member>
+        <member name="P:DAX.IO.CIM.CIMIdentifiedObject.ExternalId">
+            <summary>
+            External ID mapping from GIS or other systems. Must be unique across the CIM class.
+            </summary>
+        </member>
+        <member name="P:DAX.IO.CIM.CIMIdentifiedObject.Name">
+            <summary>
+            Name (see CIM spec).
+            </summary>
+        </member>
+        <member name="P:DAX.IO.CIM.CIMIdentifiedObject.Description">
+            <summary>
+            Description (se CIM spec).
+            </summary>
+        </member>
+        <member name="P:DAX.IO.CIM.CIMIdentifiedObject.Coords">
+            <summary>
+            Coords from GIS.
+            </summary>
+        </member>
+        <member name="P:DAX.IO.CIM.CIMIdentifiedObject.VoltageLevel">
+            <summary>
+            Voltage level in volts.
+            Components sitting in a bay will take the voltage level from the bay.
+            </summary>
+        </member>
+        <member name="P:DAX.IO.CIM.CIMIdentifiedObject.Neighbours">
+            <summary>
+            Used for graph travering (without the need to go through terminals).
+            Only use this function for data validation and traversal.
+            Don't use this function for serialization. 
+            Will return objects even that connectivity don't comply to CIM.
+            </summary>
+        </member>
+        <member name="M:DAX.IO.CIM.CIMIdentifiedObject.AddNeighbour(DAX.IO.CIM.CIMIdentifiedObject)">
+            <summary>
+            Don't use unless you know what you're doing :)
+            </summary>
+            <param name="obj"></param>
+        </member>
+        <member name="M:DAX.IO.CIM.CIMIdentifiedObject.AddNeighbour(System.Collections.Generic.IEnumerable{DAX.IO.CIM.CIMIdentifiedObject})">
+            <summary>
+            Don't use unless you know what you're doing :)
+            </summary>
+            <param name="range"></param>
+        </member>
+        <member name="M:DAX.IO.CIM.CIMIdentifiedObject.RemoveNeighbour(DAX.IO.CIM.CIMIdentifiedObject)">
+            <summary>
+            Don't use unless you know what you're doing :)
+            </summary>
+            <param name="obj"></param>
+        </member>
+        <member name="M:DAX.IO.CIM.CIMIdentifiedObject.GetEquipmentContainerRoot">
+            <summary>
+            Convenient method to return the root container.
+            If called on CIM object sitting in a bay, the substation will be returned etc.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:DAX.IO.CIM.CIMPowerTransformer">
+            <summary>
+            CIM Power Transformer.
+            </summary>
+        </member>
+        <member name="T:DAX.IO.CIM.Processing.Line.DAXSimpleLine">
+            <summary>
+            Represents a simple line (strækning) going between exactly two nodes.
+            In the CIM standard a line is an equipment container and can contain any object that may connect more than two nodes.
+            This class is a more restrict implementation used for SCADA systemet etc. that cannot handle the flexibility of the line concept as defined in the CIM standard.
+            </summary>
+        </member>
+        <member name="T:DAX.IO.CIM.Processing.Line.DAXLineRelation">
+            <summary>
+            A class used to hold information about the relation between a CIM object and a DAXSimpleLine (strækning). 
+            </summary>
+        </member>
+        <member name="P:DAX.IO.CIM.Processing.Line.DAXLineRelation.Order">
+            <summary>
+            In the DSO realm elements are typical numbered starting with the substation with the lowest number - e.g. 100-200#1, 100-200#2 and so forth.
+            </summary>
+        </member>
+        <member name="M:DAX.IO.CIM.TableLogger.Log(DAX.IO.CIM.Severity,System.Int16,System.String,DAX.IO.CIM.CIMIdentifiedObject,System.Double,System.Double,System.String,DAX.IO.CIM.CIMIdentifiedObject)">
+            <summary>
+            Logs an error message plus information on the specified cimObj to the log tabel.
+            If x and y is not specified, the first coordinate from the cimObj is used.
+            </summary>
+            <param name="severity"></param>
+            <param name="errorCode"></param>
+            <param name="message"></param>
+            <param name="cimObj"></param>
+            <param name="x"></param>
+            <param name="y"></param>
+        </member>
+        <member name="M:DAX.IO.CIM.TableLogger.LogDB(DAX.IO.CIM.Severity,System.Int16,System.String,System.Double,System.Double,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.String)">
+            <summary>
+            For internal use unless you want to have full control over what is logged to the tabel.
+            Use the Log method taking a CIMIdentifiedObject instead.
+            </summary>
+            <param name="severity"></param>
+            <param name="errorCode"></param>
+            <param name="message"></param>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="externalId"></param>
+            <param name="classType"></param>
+            <param name="objectMRID"></param>
+            <param name="nodeClass"></param>
+            <param name="nodePSRType"></param>
+            <param name="nodeMRID"></param>
+            <param name="voltageLevel"></param>
+        </member>
+    </members>
+</doc>

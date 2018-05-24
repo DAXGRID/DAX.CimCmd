@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DAX.MapboxTippecanoeUploader</name>
+    </assembly>
+    <members>
+        <member name="M:DAX.MapboxTippecanoeUploader.TippecanoeUploadClient.UploadFile(System.String)">
+            <summary>
+            Upload file to blob if it has changed
+            </summary>
+            <param name="geojsonFilename"></param>
+            <returns>true = file is uploaded. false = file is not uploaded because it has not been modified</returns>
+        </member>
+    </members>
+</doc>

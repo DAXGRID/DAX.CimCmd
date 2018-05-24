@@ -55,6 +55,9 @@
         <member name="F:DAX.CIM.PhysicalNetworkModel.CableShieldMaterialKind.steel">
             <remarks/>
         </member>
+        <member name="P:DAX.CIM.PhysicalNetworkModel.WireInfo.insulationMaterial">
+            <remarks/>
+        </member>
         <member name="P:DAX.CIM.PhysicalNetworkModel.WireInfo.insulationMaterialSpecified">
             <remarks/>
         </member>
