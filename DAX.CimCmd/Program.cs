@@ -4,6 +4,9 @@ namespace DAX.CimCmd
 {
     class Program
     {
-        static void Main() => Go.Run();
+        static void Main()
+        {
+            Go.Run();
+        }
     }
 }

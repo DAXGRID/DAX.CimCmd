@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DAX.CIM.Differ</name>
+    </assembly>
+    <members>
+        <member name="T:DAX.CIM.Differ.CimDiffer">
+            <summary>
+            Implementation of CIM differ
+            </summary>
+        </member>
+    </members>
+</doc>
