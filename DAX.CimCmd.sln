@@ -10,6 +10,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAX.CimCmd", "DAX.CimCmd\DAX.CimCmd.csproj", "{5FC96A76-41DC-4916-BB60-7E1C38B60614}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAX.CIM.NetSamScada.XMLSchemas", "..\DAX.CIM.NetSamScada\DAX.CIM.NetSamScada.XMLSchemas\DAX.CIM.NetSamScada.XMLSchemas.csproj", "{6C253ADB-6B01-45F0-8D6C-85DC337E42A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAX.CIM.NetSamScada.EquipmentXmlWriter", "..\DAX.CIM.NetSamScada - delta\DAX.CIM.NetSamScada.EquipmentXmlWriter\DAX.CIM.NetSamScada.EquipmentXmlWriter.csproj", "{F6F51F94-81CA-4913-B4C8-CF153F59D5B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +24,14 @@ Global
 		{5FC96A76-41DC-4916-BB60-7E1C38B60614}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FC96A76-41DC-4916-BB60-7E1C38B60614}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FC96A76-41DC-4916-BB60-7E1C38B60614}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C253ADB-6B01-45F0-8D6C-85DC337E42A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C253ADB-6B01-45F0-8D6C-85DC337E42A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C253ADB-6B01-45F0-8D6C-85DC337E42A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C253ADB-6B01-45F0-8D6C-85DC337E42A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6F51F94-81CA-4913-B4C8-CF153F59D5B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6F51F94-81CA-4913-B4C8-CF153F59D5B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6F51F94-81CA-4913-B4C8-CF153F59D5B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6F51F94-81CA-4913-B4C8-CF153F59D5B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

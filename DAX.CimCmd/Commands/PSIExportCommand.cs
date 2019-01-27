@@ -4,6 +4,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
+using DAX.CIM.NetSamScada;
+using DAX.CIM.NetSamScada.EquipmentXmlWriter;
+using DAX.CIM.NetSamScada.PreProcessors;
 using DAX.CIM.PhysicalNetworkModel;
 using DAX.Cson;
 using DAX.IO;
@@ -17,9 +21,9 @@ using Serilog.Core;
 
 namespace DAX.CimCmd.Commands
 {
-    [Command("export")]
-    [Description("Generates an full CSON CIM export")]
-    public class ExportCommand : BaseCommandWithOutputFile
+    [Command("psi-xml-export")]
+    [Description("Generates an full PSI XML export")]
+    public class PSIExportCommand : BaseCommandWithOutputFile
     {
         [Parameter("configFile")]
         [Description("Specifies which CIM Adapter config to use")]
@@ -31,7 +35,7 @@ namespace DAX.CimCmd.Commands
 
             AssertFileExists(ConfigFileName);
          
-            Console.WriteLine("Creating full CIM network dump based on configuration: " + ConfigFileName);
+            Console.WriteLine("Reading GIS data based on configuration: " + ConfigFileName + " (can take several minutes)...");
 
             var config = new TransformationConfig().LoadFromFile(ConfigFileName);
 
@@ -47,19 +51,23 @@ namespace DAX.CimCmd.Commands
 
             var stopWatch = Stopwatch.StartNew();
                         
-            var allCimObjects = GetIdentifiedObjects(config, graph, true, true, true).ToList();
+            var cimObjects = GetIdentifiedObjects(config, graph, true, true, true).ToList();
 
-            var cson = new CsonSerializer();
+            Console.WriteLine("Serializing to PSI/Visue CIM XML: " + base.ExportFilePath + " (can take several minutes)...");
 
-            using (var destination = File.Open(base.ExportFilePath, FileMode.Create))
-            {
-                using (var source = cson.SerializeObjects(allCimObjects))
-                {
-                    source.CopyTo(destination);
-                }
-            }
+            var converter = new NetSamEquipmentXMLConverter(cimObjects, new List<IPreProcessor> { new AddMissingBayProcessor(), new DisconnectedLinkProcessor(), new EnsureACLSUniqueNames() });
 
+            var result = converter.GetCimObjects().ToList();
 
+            var xmlProfile = converter.GetXMLData(result);
+            
+            XmlSerializer xmlSerializer = new XmlSerializer(xmlProfile.GetType());
+            System.IO.StreamWriter file = new System.IO.StreamWriter(base.ExportFilePath);
+            xmlSerializer.Serialize(file, xmlProfile);
+            file.Close();
+
+            Console.WriteLine("Finish exporting CIM XML!");
+            Console.WriteLine("It is recomended to run psi-xml-check command to check CIM XML file.");
 
         }
 

@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
+using DAX.Util;
 using GoCommando;
+using Serilog;
 
 namespace DAX.CimCmd
 {
@@ -8,6 +10,12 @@ namespace DAX.CimCmd
     {
         public void Run()
         {
+            Log.Logger = new LoggerConfiguration()
+              .WriteTo.Console()
+              .CreateLogger();
+
+            Logger.WriteToConsole = true;
+
             Execute().Wait();
         }
 

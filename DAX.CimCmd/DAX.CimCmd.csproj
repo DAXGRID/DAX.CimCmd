@@ -35,19 +35,27 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DAX.CIM.Differ, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DAX.CIM.Differ.0.0.1-b03\lib\NET45\DAX.CIM.Differ.dll</HintPath>
+      <HintPath>..\packages\DAX.CIM.Differ.0.0.1-b04\lib\NET45\DAX.CIM.Differ.dll</HintPath>
+    </Reference>
+    <Reference Include="DAX.CIM.NetSamScada.XMLSchemas, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DAX.CIM.NetSamScada - delta\DAX.CIM.NetSamScada.XMLSchemas\bin\Debug\DAX.CIM.NetSamScada.XMLSchemas.dll</HintPath>
     </Reference>
     <Reference Include="DAX.CIM.PhysicalNetworkModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DAX.CIM.PhysicalNetworkModel.2.1.1\lib\NET45\DAX.CIM.PhysicalNetworkModel.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DAX.CIM.CoreModels\DAX.CIM.PhysicalNetworkModel\bin\Debug\DAX.CIM.PhysicalNetworkModel.dll</HintPath>
     </Reference>
     <Reference Include="DAX.CIM.PhysicalNetworkModel.FeederInfo, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DAX.CIM.PhysicalNetworkModel.2.1.1\lib\NET45\DAX.CIM.PhysicalNetworkModel.FeederInfo.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DAX.CIM.CoreModels\DAX.CIM.PhysicalNetworkModel.FeederInfo\bin\Debug\DAX.CIM.PhysicalNetworkModel.FeederInfo.dll</HintPath>
     </Reference>
     <Reference Include="DAX.CIM.PhysicalNetworkModel.LineInfo, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DAX.CIM.PhysicalNetworkModel.2.1.1\lib\NET45\DAX.CIM.PhysicalNetworkModel.LineInfo.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DAX.CIM.CoreModels\DAX.CIM.PhysicalNetworkModel.LineInfo\bin\Debug\DAX.CIM.PhysicalNetworkModel.LineInfo.dll</HintPath>
     </Reference>
     <Reference Include="DAX.CIM.PhysicalNetworkModel.Traversal, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DAX.CIM.PhysicalNetworkModel.2.1.1\lib\NET45\DAX.CIM.PhysicalNetworkModel.Traversal.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DAX.CIM.CoreModels\DAX.CIM.PhysicalNetworkModel.Traversal\bin\Debug\DAX.CIM.PhysicalNetworkModel.Traversal.dll</HintPath>
     </Reference>
     <Reference Include="DAX.Cson, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DAX.Cson.1.0.0-b04\lib\NET45\DAX.Cson.dll</HintPath>
@@ -60,6 +68,9 @@
     </Reference>
     <Reference Include="DAX.IO.CIM.Serialize">
       <HintPath>..\..\DAX.Adapter\DAX.IO\DAX.IO.CIM.Serialize\bin\Debug\DAX.IO.CIM.Serialize.dll</HintPath>
+    </Reference>
+    <Reference Include="DAX.IO.CIM.XMLCheckerLib">
+      <HintPath>..\..\DAX.Adapter\DAX.IO\DAX.IO.CIM.XMLCheckerLib\bin\Debug\DAX.IO.CIM.XMLCheckerLib.dll</HintPath>
     </Reference>
     <Reference Include="FastMember, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FastMember.1.3.0\lib\net45\FastMember.dll</HintPath>
@@ -101,6 +112,12 @@
     <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <HintPath>..\packages\Serilog.2.5.0\lib\net46\Serilog.dll</HintPath>
     </Reference>
+    <Reference Include="Serilog.Sinks.ColoredConsole, Version=3.0.1.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Sinks.ColoredConsole.3.0.1\lib\net45\Serilog.Sinks.ColoredConsole.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.Console, Version=3.0.1.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Sinks.Console.3.0.1\lib\net45\Serilog.Sinks.Console.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -115,6 +132,8 @@
     <Compile Include="BaseCommandWithOutputFile.cs" />
     <Compile Include="Commands\ApplyCommand.cs" />
     <Compile Include="Commands\DiffCommand.cs" />
+    <Compile Include="Commands\CIMXMLCheckCommand.cs" />
+    <Compile Include="Commands\PSIExportCommand.cs" />
     <Compile Include="Commands\ExportCommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -142,6 +161,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="SqlServerTypes\readme.htm" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\DAX.CIM.NetSamScada - delta\DAX.CIM.NetSamScada.EquipmentXmlWriter\DAX.CIM.NetSamScada.EquipmentXmlWriter.csproj">
+      <Project>{f6f51f94-81ca-4913-b4c8-cf153f59d5b7}</Project>
+      <Name>DAX.CIM.NetSamScada.EquipmentXmlWriter</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DAX.CIM.Differ;
+using DAX.CIM.NetSamScada.EquipmentXmlWriter.Delta;
 using DAX.Cson;
 using GoCommando;
 
@@ -20,6 +21,10 @@ namespace DAX.CimCmd.Commands
         [Description("Specifies which file to use as the ending point")]
         public string ToFilePath { get; set; }
 
+        [Parameter("format")]
+        [Description("Specifies either XML (detault) or Jsonl")]
+        public string Format { get; set; }
+
         protected override async Task Execute()
         {
             await base.Execute();
@@ -29,23 +34,32 @@ namespace DAX.CimCmd.Commands
 
             //Console.WriteLine("Generate diff in here");
 
-
-            var differ = new CimDiffer();
-            var serializer = new CsonSerializer();
-
-            var prevFile = serializer.DeserializeObjects(File.OpenRead(FromFilePath));
-
-            var nextFile = serializer.DeserializeObjects(File.OpenRead(ToFilePath));
-
-            var diffObjs = differ.GetDiff(prevFile, nextFile).ToList();
-
-            Console.Out.WriteLine("Number of diff objects: " + diffObjs.Count);
-
-            using (var destination = File.Open(ExportFilePath, FileMode.Create))
+            if (Format == null || Format.ToLower() == "xml")
             {
-                using (var source = serializer.SerializeObjects(diffObjs))
+                Console.Out.WriteLine("Generating XML delta...");
+                DeltaWriter.WriteDeltaXML(FromFilePath, ToFilePath, ExportFilePath);
+            }
+            else
+            {
+                Console.Out.WriteLine("Generating Json delta...");
+
+                var differ = new CimDiffer();
+                var serializer = new CsonSerializer();
+
+                var prevFile = serializer.DeserializeObjects(File.OpenRead(FromFilePath));
+
+                var nextFile = serializer.DeserializeObjects(File.OpenRead(ToFilePath));
+
+                var diffObjs = differ.GetDiff(prevFile, nextFile).ToList();
+
+                Console.Out.WriteLine("Number of diff objects: " + diffObjs.Count);
+
+                using (var destination = File.Open(ExportFilePath, FileMode.Create))
                 {
-                    source.CopyTo(destination);
+                    using (var source = serializer.SerializeObjects(diffObjs))
+                    {
+                        source.CopyTo(destination);
+                    }
                 }
             }
 
