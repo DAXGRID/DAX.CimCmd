@@ -37,10 +37,6 @@
     <Reference Include="DAX.CIM.Differ, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DAX.CIM.Differ.0.0.1-b04\lib\NET45\DAX.CIM.Differ.dll</HintPath>
     </Reference>
-    <Reference Include="DAX.CIM.NetSamScada.XMLSchemas, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\DAX.CIM.NetSamScada - delta\DAX.CIM.NetSamScada.XMLSchemas\bin\Debug\DAX.CIM.NetSamScada.XMLSchemas.dll</HintPath>
-    </Reference>
     <Reference Include="DAX.CIM.PhysicalNetworkModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\DAX.CIM.CoreModels\DAX.CIM.PhysicalNetworkModel\bin\Debug\DAX.CIM.PhysicalNetworkModel.dll</HintPath>
@@ -163,9 +159,17 @@
     <Content Include="SqlServerTypes\readme.htm" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\DAX.CIM.NetSamScada - delta\DAX.CIM.NetSamScada.EquipmentXmlWriter\DAX.CIM.NetSamScada.EquipmentXmlWriter.csproj">
+    <ProjectReference Include="..\..\DAX.CIM.NetSamScada - delta2\DAX.CIM.NetSamScada.AssetXmlWriter\DAX.CIM.NetSamScada.AssetXmlWriter.csproj">
+      <Project>{dbca783d-494d-4f2c-af67-31724b80c2df}</Project>
+      <Name>DAX.CIM.NetSamScada.AssetXmlWriter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DAX.CIM.NetSamScada - delta2\DAX.CIM.NetSamScada.EquipmentXmlWriter\DAX.CIM.NetSamScada.EquipmentXmlWriter.csproj">
       <Project>{f6f51f94-81ca-4913-b4c8-cf153f59d5b7}</Project>
       <Name>DAX.CIM.NetSamScada.EquipmentXmlWriter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DAX.CIM.NetSamScada - delta2\DAX.CIM.NetSamScada.XMLSchemas\DAX.CIM.NetSamScada.XMLSchemas.csproj">
+      <Project>{6c253adb-6b01-45f0-8d6c-85dc337e42a5}</Project>
+      <Name>DAX.CIM.NetSamScada.XMLSchemas</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

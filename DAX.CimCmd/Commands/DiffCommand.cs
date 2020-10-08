@@ -3,7 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DAX.CIM.Differ;
-using DAX.CIM.NetSamScada.EquipmentXmlWriter.Delta;
+using DAX.CIM.NetSamScada.AssetXmlWriter.Diff;
+using DAX.CIM.NetSamScada.EquipmentXmlWriter.Diff;
+//using DAX.CIM.NetSamScada.EquipmentXmlWriter.Delta;
 using DAX.Cson;
 using GoCommando;
 
@@ -13,57 +15,46 @@ namespace DAX.CimCmd.Commands
     [Description("Generates a difference file from two CIM files")]
     public class DiffCommand : BaseCommandWithOutputFile
     {
-        [Parameter("from")]
-        [Description("Specifies which file to use as the starting point")]
+        [Parameter("fromFolder")]
+        [Description("Specifies which files to use as the starting point")]
         public string FromFilePath { get; set; }
 
-        [Parameter("to")]
-        [Description("Specifies which file to use as the ending point")]
+        [Parameter("toFolder")]
+        [Description("Specifies which files to use as the ending point")]
         public string ToFilePath { get; set; }
-
-        [Parameter("format")]
-        [Description("Specifies either XML (detault) or Jsonl")]
-        public string Format { get; set; }
 
         protected override async Task Execute()
         {
             await base.Execute();
 
-            AssertFileExists(FromFilePath);
-            AssertFileExists(ToFilePath);
+            //AssertFileExists(FromFilePath);
+            //AssertFileExists(ToFilePath);
 
-            //Console.WriteLine("Generate diff in here");
+            Console.Out.WriteLine("Generate equipment delta...");
 
-            if (Format == null || Format.ToLower() == "xml")
-            {
-                Console.Out.WriteLine("Generating XML delta...");
-                DeltaWriter.WriteDeltaXML(FromFilePath, ToFilePath, ExportFilePath);
-            }
-            else
-            {
-                Console.Out.WriteLine("Generating Json delta...");
+            string equipmentDeltaFile1 = FromFilePath + "\\konstant_equipment.jsonl";
+            string equipmentDeltaFile2 = ToFilePath + "\\konstant_equipment.jsonl";
+            string equipmentOutputFile = base.ExportFolderName + "\\konstant_equipment_psi_delta.xml";
 
-                var differ = new CimDiffer();
-                var serializer = new CsonSerializer();
+            // Create folder if not exists
+            if (!System.IO.Directory.Exists(base.ExportFolderName))
+                System.IO.Directory.CreateDirectory(base.ExportFolderName);
 
-                var prevFile = serializer.DeserializeObjects(File.OpenRead(FromFilePath));
+            var equipmentCimObjects = EquipmentDeltaDiffer.CreateEquipmentDeltaXML(equipmentDeltaFile1, equipmentDeltaFile2, equipmentOutputFile);
 
-                var nextFile = serializer.DeserializeObjects(File.OpenRead(ToFilePath));
+            Console.Out.WriteLine("Finish creating equipment delta file: " + equipmentOutputFile);
 
-                var diffObjs = differ.GetDiff(prevFile, nextFile).ToList();
+            // ASSET
 
-                Console.Out.WriteLine("Number of diff objects: " + diffObjs.Count);
+            Console.Out.WriteLine("Generate asset delta...");
 
-                using (var destination = File.Open(ExportFilePath, FileMode.Create))
-                {
-                    using (var source = serializer.SerializeObjects(diffObjs))
-                    {
-                        source.CopyTo(destination);
-                    }
-                }
-            }
+            string assetDeltaFile1 = FromFilePath + "\\konstant_asset.jsonl";
+            string assetDeltaFile2 = ToFilePath + "\\konstant_asset.jsonl";
+            string assetOutputFile = base.ExportFolderName + "\\konstant_asset_psi_delta.xml";
 
-            Console.Out.WriteLine("Diff file written: " + ExportFilePath);
+            AssetDeltaDiffer.CreateAssetDeltaXML(assetDeltaFile1, assetDeltaFile2, assetOutputFile, equipmentCimObjects);
+
+            Console.Out.WriteLine("Finish creating asset delta file: " + equipmentOutputFile);
 
         }
     }

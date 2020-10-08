@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using DAX.CIM.NetSamScada;
+using DAX.CIM.NetSamScada.AssetXmlWriter;
 using DAX.CIM.NetSamScada.EquipmentXmlWriter;
 using DAX.CIM.NetSamScada.PreProcessors;
 using DAX.CIM.PhysicalNetworkModel;
@@ -26,7 +27,7 @@ namespace DAX.CimCmd.Commands
     public class PSIExportCommand : BaseCommandWithOutputFile
     {
         [Parameter("configFile")]
-        [Description("Specifies which CIM Adapter config to use")]
+        [Description("Specifies which CIM Adapter config to use")]  
         public string ConfigFileName { get; set; }
                      
         protected override async Task Execute()
@@ -34,41 +35,75 @@ namespace DAX.CimCmd.Commands
             await base.Execute();
 
             AssertFileExists(ConfigFileName);
-         
+
             Console.WriteLine("Reading GIS data based on configuration: " + ConfigFileName + " (can take several minutes)...");
 
             var config = new TransformationConfig().LoadFromFile(ConfigFileName);
 
-            //config.DataReaders[0].ConfigParameters.Add(new ConfigParameter { Name = "Extent", Value = "548694,552348,6187246,6189391" });
-
             var transformer = config.InitializeDataTransformer("test");
             ((CIMGraphWriter)transformer.GetFirstDataWriter()).DoNotRunPreCheckConnectivity();
-                    
+            ((CIMGraphWriter)transformer.GetFirstDataWriter()).DoNotLogToTable();
+
             transformer.TransferData();
-                   
+
             var writer = (CIMGraphWriter)transformer.GetFirstDataWriter();
             var graph = writer.GetCIMGraph();
 
-            var stopWatch = Stopwatch.StartNew();
-                        
-            var cimObjects = GetIdentifiedObjects(config, graph, true, true, true).ToList();
+            // Create folder if not exists
+            if (!System.IO.Directory.Exists(base.ExportFolderName))
+                System.IO.Directory.CreateDirectory(base.ExportFolderName);
 
-            Console.WriteLine("Serializing to PSI/Visue CIM XML: " + base.ExportFilePath + " (can take several minutes)...");
+            ExportEquipmentPsiFile(config, graph);
+            ExportAssetPsiFile(config, graph);
+
+        }
+
+        private void ExportEquipmentPsiFile(TransformationConfig config, CIMGraph graph)
+        {
+            var stopWatch = Stopwatch.StartNew();
+
+            var cimObjects = GetIdentifiedObjects(config, graph, true, false, true).ToList();
+
+            var exportFileName = base.ExportFolderName + "\\konstant_equipment_psi.xml";
+
+            Console.WriteLine("Serializing to PSI/Visue CIM Equipment XML: " + exportFileName + " (can take several minutes)...");
 
             var converter = new NetSamEquipmentXMLConverter(cimObjects, new List<IPreProcessor> { new AddMissingBayProcessor(), new DisconnectedLinkProcessor(), new EnsureACLSUniqueNames() });
 
             var result = converter.GetCimObjects().ToList();
 
             var xmlProfile = converter.GetXMLData(result);
-            
+
             XmlSerializer xmlSerializer = new XmlSerializer(xmlProfile.GetType());
-            System.IO.StreamWriter file = new System.IO.StreamWriter(base.ExportFilePath);
+            System.IO.StreamWriter file = new System.IO.StreamWriter(exportFileName);
             xmlSerializer.Serialize(file, xmlProfile);
             file.Close();
 
-            Console.WriteLine("Finish exporting CIM XML!");
-            Console.WriteLine("It is recomended to run psi-xml-check command to check CIM XML file.");
+            Console.WriteLine("Finish exporting Equipment CIM XML!");
+        }
 
+        private void ExportAssetPsiFile(TransformationConfig config, CIMGraph graph)
+        {
+            var stopWatch = Stopwatch.StartNew();
+
+            var cimObjects = GetIdentifiedObjects(config, graph, false, true, false).ToList();
+
+            var exportFileName = base.ExportFolderName + "\\konstant_asset_psi.xml";
+
+            Console.WriteLine("Serializing to PSI/Visue CIM Asset XML: " + exportFileName + " (can take several minutes)...");
+
+            var converter = new NetSamAssetXMLConverter(cimObjects);
+
+            var result = converter.GetCimObjects().ToList();
+
+            var xmlProfile = converter.GetXMLData(result);
+
+            XmlSerializer xmlSerializer = new XmlSerializer(xmlProfile.GetType());
+            System.IO.StreamWriter file = new System.IO.StreamWriter(exportFileName);
+            xmlSerializer.Serialize(file, xmlProfile);
+            file.Close();
+
+            Console.WriteLine("Finish exporting Asset CIM XML!");
         }
 
         static IEnumerable<IdentifiedObject> GetIdentifiedObjects(TransformationConfig config, CIMGraph graph, bool includeEquipment = false, bool includeAssets = false, bool includeLocations = false)

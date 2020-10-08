@@ -30,7 +30,7 @@ namespace DAX.CimCmd.Commands
             await base.Execute();
 
             AssertFileExists(ConfigFileName);
-         
+
             Console.WriteLine("Creating full CIM network dump based on configuration: " + ConfigFileName);
 
             var config = new TransformationConfig().LoadFromFile(ConfigFileName);
@@ -39,28 +39,59 @@ namespace DAX.CimCmd.Commands
 
             var transformer = config.InitializeDataTransformer("test");
             ((CIMGraphWriter)transformer.GetFirstDataWriter()).DoNotRunPreCheckConnectivity();
-                    
+            ((CIMGraphWriter)transformer.GetFirstDataWriter()).DoNotLogToTable();
+
             transformer.TransferData();
-                   
+
             var writer = (CIMGraphWriter)transformer.GetFirstDataWriter();
             var graph = writer.GetCIMGraph();
 
             var stopWatch = Stopwatch.StartNew();
-                        
-            var allCimObjects = GetIdentifiedObjects(config, graph, true, true, true).ToList();
+
+            ExportEquipment(config, graph);
+            ExportAsset(config, graph);
+        }
+
+        private void ExportEquipment(TransformationConfig config, CIMGraph graph)
+        {
+            var allCimObjects = GetIdentifiedObjects(config, graph, true, false, true).ToList();
+
+
+            // Create folder if not exists
+            if (!System.IO.Directory.Exists(base.ExportFolderName))
+                System.IO.Directory.CreateDirectory(base.ExportFolderName);
+
 
             var cson = new CsonSerializer();
 
-            using (var destination = File.Open(base.ExportFilePath, FileMode.Create))
+            using (var destination = File.Open(base.ExportFolderName + "\\konstant_equipment.jsonl", FileMode.Create))
             {
                 using (var source = cson.SerializeObjects(allCimObjects))
                 {
                     source.CopyTo(destination);
                 }
             }
+        }
+
+        private void ExportAsset(TransformationConfig config, CIMGraph graph)
+        {
+            var allCimObjects = GetIdentifiedObjects(config, graph, false, true, false).ToList();
 
 
+            // Create folder if not exists
+            if (!System.IO.Directory.Exists(base.ExportFolderName))
+                System.IO.Directory.CreateDirectory(base.ExportFolderName);
 
+
+            var cson = new CsonSerializer();
+
+            using (var destination = File.Open(base.ExportFolderName + "\\konstant_asset.jsonl", FileMode.Create))
+            {
+                using (var source = cson.SerializeObjects(allCimObjects))
+                {
+                    source.CopyTo(destination);
+                }
+            }
         }
 
         static IEnumerable<IdentifiedObject> GetIdentifiedObjects(TransformationConfig config, CIMGraph graph, bool includeEquipment = false, bool includeAssets = false, bool includeLocations = false)

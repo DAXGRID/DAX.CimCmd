@@ -6,9 +6,9 @@ namespace DAX.CimCmd
 {
     public abstract class BaseCommandWithOutputFile : BaseCommand
     {
-        [Parameter("out")]
-        [Description("Specifies file path of the export file to generate")]
-        public string ExportFilePath { get; set; }
+        [Parameter("outFolder")]
+        [Description("Specifies folder where exported files should be placed")]
+        public string ExportFolderName { get; set; }
 
         [Parameter("force", optional: true)]
         [Description("Indicates that the export file should be overwritten if it already exists")]
@@ -16,9 +16,9 @@ namespace DAX.CimCmd
 
         protected override async Task Execute()
         {
-            if (File.Exists(ExportFilePath) && !Force)
+            if (File.Exists(ExportFolderName) && !Force)
             {
-                throw new GoCommandoException($"The file '{ExportFilePath}' already exists - please use the -force flag if you intend to overwrite it");
+                throw new GoCommandoException($"The file '{ExportFolderName}' already exists - please use the -force flag if you intend to overwrite it");
             }
         }
     }
